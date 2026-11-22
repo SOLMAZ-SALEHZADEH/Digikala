@@ -24,7 +24,7 @@ def user_register_view(request):
             messages.error(request, f'there was an error in registeration')
     else:
         form= UserRegisterForm()
-    return render(request,'register.html',{'form':form})   
+    return render(request,'registration/signup.html',{'form':form})   
 
 def user_login_view(request):
     if request.method == 'POST':
@@ -43,7 +43,7 @@ def user_login_view(request):
             messages.error(request, 'Invalid phone number or password.')
     else:
         form= UserLoginForm()
-    return render(request,'login.html',{'form':form})        
+    return render(request,'registration/login.html',{'form':form})        
     
 def user_logout_view(request):
     messages.info(request, f'successfully loged out')

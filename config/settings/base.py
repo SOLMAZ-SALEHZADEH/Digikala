@@ -129,6 +129,9 @@ STATIC_URL = 'static/'
 MEDIA_URL = "media/"
 STATICFILES_DIRS= [BASE_DIR / 'static']
 
+# where we want to save static files and media pysically
+STATIC_ROOT = BASE_DIR / "staticfiles"
+MEDIA_ROOT = BASE_DIR / "mediafiles"
 
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
