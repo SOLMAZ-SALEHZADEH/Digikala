@@ -60,4 +60,15 @@ class User(AbstractBaseUser,PermissionsMixin):
         return f'{self.first_name} {self.last_name}'
     
 
+class CustomerProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    balance = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+    
+class  SellerProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
     
