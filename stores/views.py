@@ -89,3 +89,10 @@ def store_detail_view(request,store_id):
         'store': store,
         'products': products
     })
+
+
+def stores_view(request):
+    stores = Store.objects.all()
+    return render(request, 'stores.html', {
+        'stores': stores,
+    })
