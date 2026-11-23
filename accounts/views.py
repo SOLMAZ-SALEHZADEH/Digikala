@@ -38,6 +38,9 @@ def user_login_view(request):
             user= form.get_user()
             login(request,user)
             messages.success(request, f'user {user.first_name} has successfully entered')
+            next_url = request.POST.get('next')
+            if next_url:
+                return redirect(next_url)
             return redirect('home')  
         else:
             messages.error(request, 'Invalid phone number or password.')

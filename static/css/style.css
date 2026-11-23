@@ -202,3 +202,74 @@ main.container {
 .auth-link a:hover {
     text-decoration: underline;
 }
+
+
+
+/* Create Product Page */
+
+.create-product-container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 30px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.create-product-container h2 {
+    text-align: center;
+    margin-bottom: 10px;
+    color: #222;
+}
+
+.create-product-container .form-description {
+    text-align: center;
+    color: #777;
+    margin-bottom: 25px;
+}
+
+.create-product-container .form-group {
+    margin-bottom: 20px;
+}
+
+.create-product-container label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.create-product-container input,
+.create-product-container textarea {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #ddd;
+    border-radius: 7px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.create-product-container input:focus,
+.create-product-container textarea:focus {
+    outline: none;
+    border-color: #e63946;
+}
+
+.create-product-container input[type="file"] {
+    padding: 8px;
+    background: #fafafa;
+}
+
+.create-product-container .btn {
+    width: 100%;
+    padding: 12px;
+    background: #e63946;
+    color: white;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.create-product-container .btn:hover {
+    background: #c92f3b;
+}
