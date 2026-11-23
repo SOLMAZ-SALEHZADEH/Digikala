@@ -29,8 +29,7 @@
     </table>
 
     <p><strong>Total:</strong> ${{ total_price }}</p>
-    <a href="#" class="btn">✅ Checkout</a>
-    {% comment %} <a href="{% url 'checkout' %}" class="btn">✅ Checkout</a> {% endcomment %}
+    <a href="{% url 'checkout' %}" class="btn">✅ Checkout</a>
 
 {% else %}
     <p>Your cart is empty.</p>

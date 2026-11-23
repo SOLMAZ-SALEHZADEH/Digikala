@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from accounts.models import CustomerProfile
 from stores.models import Product
-from .models import Cart, CartItem
+from .models import *
 from django.shortcuts import render
 
 
@@ -67,4 +67,29 @@ def remove_from_cart(request,product_id):
     cart_item.delete()
 
     return redirect('cart')
+
+@login_required
+def checkout_view(request):
+    customer = get_object_or_404(CustomerProfile,user=request.user)
+    cart = Cart.objects.filter(customer=customer).first()
+    if not cart or not cart.cartitem_set.exists():
+        return redirect('cart')
+    total_amount = 0
+
+    for item in cart.cartitem_set.all():
+        total_amount += item.product.price * item.quantity
+
+    order = Order.objects.create(
+        customer = customer,
+        total_amount = total_amount )
     
+    for item in cart.cartitem_set.all():
+        OrderItem.objects.create(
+            order=order,
+            price=item.product.price,
+            quantity=item.quantity,
+            product=item.product
+        ) 
+    cart.delete()    
+        
+    return redirect('cart')

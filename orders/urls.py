@@ -8,5 +8,10 @@ urlpatterns = [
     'remove_from_cart/<int:product_id>/',
     remove_from_cart,
     name='remove_from_cart'
+),
+    path(
+    'checkout/',
+    checkout_view,
+    name='checkout'
 )
 ]
