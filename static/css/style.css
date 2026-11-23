@@ -273,3 +273,24 @@ main.container {
 .create-product-container .btn:hover {
     background: #c92f3b;
 }
+
+.home-products {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    justify-content: flex-start;
+}
+
+.home-products .card {
+    flex: 1 1 220px;
+    max-width: calc(25% - 19px);
+}
+
+.container-without-flex{
+    width: 90%;
+    max-width: 1100px;
+    margin: 0 auto;
+    justify-content: space-between;
+    align-items: center;
+}

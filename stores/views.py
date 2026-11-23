@@ -96,3 +96,9 @@ def stores_view(request):
     return render(request, 'stores.html', {
         'stores': stores,
     })
+
+def home_view(request):
+    products = Product.objects.order_by('-created_at')
+    return render(request, 'home.html', {
+        'products': products,
+    })
