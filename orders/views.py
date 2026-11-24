@@ -4,7 +4,8 @@ from accounts.models import CustomerProfile
 from stores.models import Product
 from .models import *
 from django.shortcuts import render
-
+from decimal import Decimal, InvalidOperation
+from django.contrib import messages
 
 @login_required
 def add_to_cart_view(request, product_id):
@@ -78,7 +79,12 @@ def checkout_view(request):
 
     for item in cart.cartitem_set.all():
         total_amount += item.product.price * item.quantity
+    for item in cart.cartitem_set.all():
+        total_amount += item.product.price * item.quantity
 
+    if customer.balance < total_amount:
+        messages.error(request, 'You do not have enough money in your account.')
+        return redirect('cart')
     order = Order.objects.create(
         customer = customer,
         total_amount = total_amount )
@@ -90,6 +96,49 @@ def checkout_view(request):
             quantity=item.quantity,
             product=item.product
         ) 
+        item.product.store.balance += item.product.price * item.quantity
+        item.product.store.save()
+    customer.balance -= total_amount   
+    customer.save() 
     cart.delete()    
         
     return redirect('cart')
+
+
+@login_required
+def add_balance_view(request):
+    customer = get_object_or_404(
+            CustomerProfile,
+            user=request.user
+        )
+    if request.method == 'POST':
+        amount = request.POST.get('amount')
+        try:
+            amount = Decimal(amount)
+
+            if amount <= 0:
+                raise ValueError
+
+        except (InvalidOperation, TypeError, ValueError):
+            messages.error(request, 'Please enter a valid positive amount.')
+            return redirect('payment')
+        customer.balance += amount
+        customer.save()
+
+        messages.success(request, 'Your balance has been updated successfully.')
+        return redirect('payment')
+    return render(request, 'payment.html', {
+    'customer': customer})
+
+
+@login_required
+def order_history_view(request):
+    customer = get_object_or_404(
+        CustomerProfile,
+        user=request.user
+    )
+    orders = customer.order_set.all()
+    return render(request, 'order_history.html', {
+        'orders': orders,
+
+    })

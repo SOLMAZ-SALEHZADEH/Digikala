@@ -20,6 +20,7 @@ from django.urls import path , include
 from django.conf import settings
 from django.conf.urls.static import static
 from stores.views import home_view
+from orders.views import add_balance_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,6 +28,7 @@ urlpatterns = [
     path('stores/', include('stores.urls')),
     path('', home_view, name='home'),
     path('orders/', include('orders.urls')),
+    path('payment/', add_balance_view, name='payment'),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

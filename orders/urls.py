@@ -13,5 +13,7 @@ urlpatterns = [
     'checkout/',
     checkout_view,
     name='checkout'
-)
+),
+path('payment/', add_balance_view, name='payment'),
+path('order_history/', order_history_view, name='order_history'),
 ]

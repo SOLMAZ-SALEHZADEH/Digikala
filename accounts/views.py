@@ -3,6 +3,8 @@ from accounts.forms import UserLoginForm, UserRegisterForm
 from accounts.models import CustomerProfile
 from django.contrib.auth import login, logout
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect
 # Create your views here.
 
 def user_register_view(request):
@@ -52,3 +54,15 @@ def user_logout_view(request):
     messages.info(request, f'successfully loged out')
     logout(request)
     return redirect('home')    
+
+
+@login_required
+def customer_view(request):
+    customerProfile = get_object_or_404(
+        CustomerProfile,
+        user=request.user
+    )
+
+    return render(request, 'customer_panel.html', {
+        'customer': customerProfile,
+    })
