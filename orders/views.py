@@ -84,7 +84,7 @@ def checkout_view(request):
 
     if customer.balance < total_amount:
         messages.error(request, 'You do not have enough money in your account.')
-        return redirect('cart')
+        return redirect('payment')
     order = Order.objects.create(
         customer = customer,
         total_amount = total_amount )
@@ -101,7 +101,7 @@ def checkout_view(request):
     customer.balance -= total_amount   
     customer.save() 
     cart.delete()    
-        
+    messages.error(request, 'Your order has been placed successfully!')    
     return redirect('cart')
 
 
@@ -126,7 +126,7 @@ def add_balance_view(request):
         customer.save()
 
         messages.success(request, 'Your balance has been updated successfully.')
-        return redirect('payment')
+        return redirect('customer')
     return render(request, 'payment.html', {
     'customer': customer})
 
