@@ -8,9 +8,10 @@ from django.contrib import messages
 # Create your views here.
 @login_required
 def seller_panel_view(request):
-    seller_profile,_ = SellerProfile.objects.get_or_create(
-        user=request.user
-    )
+    seller_profile = SellerProfile.objects.filter(user=request.user).first()
+
+    if not seller_profile:
+        return redirect('customer')
     # When a ForeignKey is set up so that one Seller can have multiple stores, 
     # you can retrieve all the stores for a given seller using Seller.store_set.all()
     stores = seller_profile.store_set.all()
@@ -23,6 +24,13 @@ def seller_panel_view(request):
 
 @login_required
 def create_store_view(request):
+    seller_profile = SellerProfile.objects.filter(
+        user=request.user
+    ).first()
+
+    if not seller_profile:
+        messages.error(request, 'You must become a seller first.')
+        return redirect('customer')
     if request.method == 'POST':
         form = StoreForm(request.POST) 
         if form.is_valid():
@@ -41,6 +49,19 @@ def create_store_view(request):
 
 @login_required
 def create_Product_view(request,store_id):
+    seller_profile = SellerProfile.objects.filter(
+        user=request.user
+    ).first()
+
+    store = get_object_or_404(
+        Store,
+        id=store_id,
+        owner=seller_profile
+    )
+
+    if not seller_profile:
+        messages.error(request, 'You must become a seller first.')
+        return redirect('customer')
     if request.method == 'POST':
         # send request.FILES in addition to request.POST
         form = ProductForm(request.POST,request.FILES) 
@@ -115,6 +136,7 @@ def edit_product_view(request, store_id, product_id):
 @login_required
 def store_detail_view(request,store_id):       
     store = Store.objects.get(id=store_id)
+    
 #     This means that each product is connected to one store.
 
 # The stoer ForeignKey is stored in the Product table, not in the Store table.

@@ -28,11 +28,12 @@
             <p><strong>price: ${{ product.price }}</strong></p>
             <p><strong>stock: {{ product.stock }}</strong></p>
 
-            {% if user.is_authenticated %}
+            {% if user.is_authenticated and user == store.owner.user %}
             <a href="{% url 'edit_product' store.id product.id %}" class="btn">
                 Edit Product
             </a>
-            {% else %}
+            {% endif %}
+            {% if  not user.is_authenticated %}
                 <p><a href="{% url 'login' %}">Login to Buy</a></p>
             {% endif %}
         </div>

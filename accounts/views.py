@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from accounts.forms import UserLoginForm, UserRegisterForm
-from accounts.models import CustomerProfile
+from accounts.models import CustomerProfile, SellerProfile
 from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -63,6 +63,19 @@ def customer_view(request):
         user=request.user
     )
 
+    # if user is not seller none will be returned
+    sellerProfile =  SellerProfile.objects.filter(
+        user=request.user
+    ).first()
+
     return render(request, 'customer_panel.html', {
         'customer': customerProfile,
+        'seller_profile' : sellerProfile
     })
+
+@login_required
+def become_seller_view(request):
+    SellerProfile.objects.get_or_create(user=request.user)
+    return redirect ('seller_panel')
+
+
