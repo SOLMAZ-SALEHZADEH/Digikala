@@ -5,8 +5,14 @@
 
 {% block content %}
 <div class="create-product-container">
-    <h2>📦 Add New Product</h2>
-    <p class="form-description">Add a new product to your store.</p>
+    <h2>📦 {{ title }}</h2>
+    <p class="form-description">
+        {% if product %}
+            Update your product information.
+        {% else %}
+            Add a new product to your store.
+        {% endif %}
+    </p>
 
     <form method="post" enctype="multipart/form-data" class="auth-form">
         {% csrf_token %}
@@ -26,6 +32,12 @@
         </div>
 
         <div class="form-group">
+            <label for="id_price">stock</label>
+            {{ form.stock }}
+            {{ form.stock.errors }}
+        </div>
+
+        <div class="form-group">
             <label for="id_description">Description</label>
             {{ form.description }}
             {{ form.description.errors }}
@@ -37,7 +49,13 @@
             {{ form.image.errors }}
         </div>
 
-        <button type="submit" class="btn">Add Product</button>
+        <button type="submit" class="btn">
+            {% if product %}
+            Edit Product
+            {% else %}
+            Add a new product to your store.
+            {% endif %}
+            </button>
     </form>
 </div>
 {% endblock %}

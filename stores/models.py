@@ -25,6 +25,7 @@ class Product(models.Model):
     image=models.ImageField(upload_to='products-avatars/',blank=True,null=True)
     store=models.ForeignKey(Store, on_delete=models.CASCADE)
     created_at=models.DateTimeField(auto_now_add=True)
+    stock=models.IntegerField(default=0)
     def __str__(self):
         return self.name
 

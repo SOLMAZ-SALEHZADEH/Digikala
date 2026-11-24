@@ -21,7 +21,7 @@ class ProductForm(forms.ModelForm):
         # it sets that forms works with Product model
         model= Product
         # مشخص می‌کند  چه فیلدهایی در فرم نمایش داده شود
-        fields= ['name','price','description','image']
+        fields= ['name','price','description','image','stock']
         # django uses Textarea by default for textfield attr we just wan to set lines to 4
         widgets = {
             'description': forms.Textarea(attrs={'rows': 4}),

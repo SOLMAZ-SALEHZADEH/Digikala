@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from accounts.models import SellerProfile
 from stores.forms import ProductForm, StoreForm
@@ -49,6 +49,7 @@ def create_Product_view(request,store_id):
             description= form.cleaned_data['description']
             price= form.cleaned_data['price']
             image= form.cleaned_data['image']
+            stock = form.cleaned_data['stock']
             seller_profile = SellerProfile.objects.get(user=request.user)
             store = Store.objects.get(
             id=store_id,
@@ -60,6 +61,7 @@ def create_Product_view(request,store_id):
                 description=description,
                 price=price,
                 image=image,
+                stock=stock,
                 store=store)
             messages.success(request, f'product {name} has created successfully')
             return redirect('store_detail', store_id=store.id)
@@ -69,6 +71,46 @@ def create_Product_view(request,store_id):
         # create an empty form 
         form= ProductForm()         
     return render(request, 'create_product.html', {'form':form})
+
+@login_required
+def edit_product_view(request, store_id, product_id):
+
+    product = get_object_or_404(
+        Product,
+        id=product_id,
+        store_id=store_id,
+        store__owner__user=request.user
+    )
+
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES, instance=product)
+
+        if form.is_valid():
+            product.name = form.cleaned_data['name']
+            product.price = form.cleaned_data['price']
+            product.description = form.cleaned_data['description']
+            product.image = form.cleaned_data['image']
+            product.stock = form.cleaned_data['stock']
+
+            product.save()
+
+            messages.success(
+                request,
+                f'Product {product.name} updated successfully!'
+            )
+            return redirect('store_detail', store_id=store_id)
+
+        else:
+            messages.error(request, 'Please fill the fields correctly.')
+
+    else:
+        form = ProductForm(instance=product)
+
+    return render(request, 'create_product.html', {
+        'form': form,
+        'product': product,
+        'title': 'Edit Product'
+    })
 
 @login_required
 def store_detail_view(request,store_id):       

@@ -69,39 +69,56 @@ def remove_from_cart(request,product_id):
 
     return redirect('cart')
 
+
 @login_required
 def checkout_view(request):
-    customer = get_object_or_404(CustomerProfile,user=request.user)
+    customer = get_object_or_404(CustomerProfile, user=request.user)
     cart = Cart.objects.filter(customer=customer).first()
+
     if not cart or not cart.cartitem_set.exists():
         return redirect('cart')
+
     total_amount = 0
 
     for item in cart.cartitem_set.all():
         total_amount += item.product.price * item.quantity
-    for item in cart.cartitem_set.all():
-        total_amount += item.product.price * item.quantity
 
     if customer.balance < total_amount:
-        messages.error(request, 'You do not have enough money in your account.')
+        messages.error(
+            request,
+            'You do not have enough money in your account.'
+        )
         return redirect('payment')
+
     order = Order.objects.create(
-        customer = customer,
-        total_amount = total_amount )
-    
+        customer=customer,
+        total_amount=total_amount
+    )
+
     for item in cart.cartitem_set.all():
         OrderItem.objects.create(
             order=order,
             price=item.product.price,
             quantity=item.quantity,
             product=item.product
-        ) 
+        )
+
         item.product.store.balance += item.product.price * item.quantity
         item.product.store.save()
-    customer.balance -= total_amount   
-    customer.save() 
-    cart.delete()    
-    messages.error(request, 'Your order has been placed successfully!')    
+
+        item.product.stock -= item.quantity
+        item.product.save()
+
+    customer.balance -= total_amount
+    customer.save()
+
+    cart.delete()
+
+    messages.success(
+        request,
+        'Your order has been placed successfully!'
+    )
+
     return redirect('cart')
 
 
